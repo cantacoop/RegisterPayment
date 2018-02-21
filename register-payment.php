@@ -12,6 +12,7 @@ Text Domain:  register-payment
 */
 
 include_once(plugin_dir_path( __FILE__ ) . 'core/views/form.php');
+include_once(plugin_dir_path( __FILE__ ) . 'core/controllers/post.php');
 
 function rp_register_shortcode() {
 
@@ -25,7 +26,7 @@ function rp_payment_column_header( $columns ) {
     $columns['title']   = __('Order');
     $columns['status']  = __('Status');
     $columns['total']   = __('Total');
-    $columns['paid_on']    = __('Pain on');
+    $columns['paid_on'] = __('Pain on');
 
     return $columns;
 }

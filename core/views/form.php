@@ -1,10 +1,22 @@
 <?php
 function rp_form_shortcode( $args ) {
+    $args = array(
+        'numberposts' => -1,
+        'post_type'   => 'rp_journal'
+      );
+       
+    $journals = get_posts( $args );
+    $options = '';
+    foreach ($journals as $journal) {
+        setup_postdata( $journal );
+        $options .= '<option value="'.$journal->ID.'">'. $journal->post_title .'</option>';
+    }
 
-    return
+    $output =
 '<div class="container-fluid">
     <div class="row">
-        <form>
+        <form method="post"
+        action="/wp-admin/admin-ajax.php?action=rp_save_payment">
             <fieldset>
                 <legend>Register Payment</legend>
                 <p class="form-group">
@@ -20,28 +32,26 @@ function rp_form_shortcode( $args ) {
                     <input type="text" name="rp_email" id="rp_email" placeholder="john@example.com">
                 </p>
                 <p class="form-group">
-                    <label for="rp_invoice">Invoice Number</label>
-                    <input type="text" name="rp_invoice" id="rp_invoice" placeholder="INV/2018/0001">
+                    <label for="rp_invoice_number">Invoice Number</label>
+                    <input type="text" name="rp_invoice_number" id="rp_invoice_number" placeholder="INV/2018/0001">
                 </p>
                 <p class="form-group">
-                    <label for="rp_amount">Payment Amount</label>
-                    <input type="text" name="rp_amount" id="rp_amount" placeholder="0.00">
+                    <label for="rp_payment_amount">Payment Amount</label>
+                    <input type="text" name="rp_payment_amount" id="rp_payment_amount" placeholder="0.00">
                 </p>
                 <p class="form-group">
-                    <label for="rp_journal">Payment Journal</label>
-                    <select id="rp_journal">
-                        <option value="cash">Cash</option>
-                        <option value="kbank">Kasikorn Bank</option>
-                        <option value="bbl">Bangkok Bank</option>
-                    </select>
+                    <label for="rp_payment_journal">Payment Journal</label>
+                    <select name="rp_payment_journal" id="rp_payment_journal">'.$options;
+
+                    $output .= '</select>
                 </p>
                 <p class="form-group">
-                    <label for="rp_date">Payment Date</label>
-                    <input type="date" name="rp_date" id="rp_date">
+                    <label for="rp_payment_date">Payment Date</label>
+                    <input type="date" name="rp_payment_date" id="rp_payment_date">
                 </p>
                 <p class="form-group">
-                    <label for="rp_time">Payment Time</label>
-                    <input type="time" name="rp_time" id="rp_time">
+                    <label for="rp_payment_time">Payment Time</label>
+                    <input type="time" name="rp_payment_time" id="rp_payment_time">
                 </p>
                 <p class="form-group">
                     <label for="rp_memo">Memo</label>
@@ -55,5 +65,7 @@ function rp_form_shortcode( $args ) {
     </div>
 </div>
 ';
+
+    return $output;
 
 }
