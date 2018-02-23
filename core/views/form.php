@@ -35,7 +35,7 @@ function rp_form_shortcode( $args ) {
                 </p>
                 <p class="form-group">
                     <label for="rp_invoice_number">Invoice Number <span style="color:red">*</span></label>
-                    <input type="text" name="rp_invoice_number" id="rp_invoice_number" placeholder="INV/2018/0001">
+                    <input type="text" name="rp_invoice_number" id="rp_invoice_number" placeholder="1024">
                 </p>
                 <p class="form-group">
                     <label for="rp_payment_amount">Payment Amount <span style="color:red">*</span></label>

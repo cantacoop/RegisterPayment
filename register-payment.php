@@ -15,6 +15,10 @@ Text Domain:  register-payment
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+
+// zlib.output_compression = Off;
+ini_set('zlib.output_compression', 'Off');
+
 // include form
 include_once(plugin_dir_path( __FILE__ ) . 'core/views/form.php');
 
@@ -37,6 +41,9 @@ include_once( plugin_dir_path( __FILE__ ) . 'cpt/rp_payment.php');
 
 // include Custom Field journal
 include_once( plugin_dir_path( __FILE__ ) . 'cpt/rp_journal.php');
+
+// include admin menu
+include_once( plugin_dir_path( __FILE__ ) . 'core/views/menu.php' );
 
 // register ajax actions
 add_action( 'wp_ajax_nopriv_rp_save_payment', 'rp_save_payment' ); // regular website visitor
@@ -114,7 +121,7 @@ function rp_public_scripts() {
 
     // register scripts with WordPress's internal library
     wp_register_script( 'register-payment-js', 
-        plugins_url( '/js/register-payment.js', __FILE__ ), 
+        plugins_url( '/js/form.js', __FILE__ ), 
         array('jquery'), 
         '', 
         true 
@@ -122,6 +129,17 @@ function rp_public_scripts() {
 
     // add to que of scripts that get loaded into every page
     wp_enqueue_script( 'register-payment-js' );
+
+    // register scripts with WordPress's internal library
+    wp_register_script( 'menu-admin-js', 
+        plugins_url( '/js/menu.js', __FILE__ ), 
+        array('jquery'), 
+        '', 
+        true 
+    );
+
+    // add to que of scripts that get loaded into every page
+    wp_enqueue_script( 'menu-admin-js' );
 }
 // load external files to public website
 add_action( 'wp_enqueue_scripts', 'rp_public_scripts');
