@@ -31,6 +31,7 @@ function rp_save_payment() {
             $result['errors'] = $errors;
         }else {
 
+            // get form data
             $customer      = esc_attr( $_POST['rp_customer'] );
             $phone         = esc_attr( $_POST['rp_phone'] );
             $email         = esc_attr( $_POST['rp_email'] );
@@ -48,8 +49,10 @@ function rp_save_payment() {
                 'post_status'   => 'publish',
                 'post_title'    => $title,
             );
+            // add new register payment
             $payment_id = wp_insert_post( $payment_data, true );
 
+            // update custom meta data
             update_field( rp_get_acf_key('rp_customer'), $customer, $payment_id );
             update_field( rp_get_acf_key('rp_phone'), $phone, $payment_id );
             update_field( rp_get_acf_key('rp_email'), $email, $payment_id );
@@ -61,6 +64,7 @@ function rp_save_payment() {
             update_field( rp_get_acf_key('rp_memo'), $memo, $payment_id );
             update_field( rp_get_acf_key('rp_status'), 'Open', $payment_id );
 
+            // update status
             $result['status'] = 1;
             $result['message'] = 'Subscription saved';
         }
@@ -73,6 +77,7 @@ function rp_save_payment() {
 add_action( 'wp_ajax_nopriv_rp_save_payment', 'rp_save_payment' ); // regular website visitor
 add_action( 'wp_ajax_rp_save_payment', 'rp_save_payment' ); // admin user
 
+// get key acf
 function rp_get_acf_key( $field_name ) {
 
     switch( $field_name ) {

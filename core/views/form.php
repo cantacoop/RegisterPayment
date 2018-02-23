@@ -3,8 +3,9 @@ function rp_form_shortcode( $args ) {
     $args = array(
         'numberposts' => -1,
         'post_type'   => 'rp_journal'
-      );
-       
+    );
+    
+    // get list journal
     $journals = get_posts( $args );
     $options = '';
     foreach ($journals as $journal) {
@@ -12,6 +13,7 @@ function rp_form_shortcode( $args ) {
         $options .= '<option value="'.$journal->ID.'">'. $journal->post_title .'</option>';
     }
 
+    // form register payment
     $output =
 '<div class="container-fluid">
     <div class="row">
