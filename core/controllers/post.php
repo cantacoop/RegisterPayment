@@ -9,45 +9,61 @@ function rp_save_payment() {
 
     try {
 
-        $customer      = esc_attr( $_POST['rp_customer'] );
-        $phone         = esc_attr( $_POST['rp_phone'] );
-        $email         = esc_attr( $_POST['rp_email'] );
-        $invoice       = esc_attr( $_POST['rp_invoice_number'] );
-        $amount        = esc_attr( $_POST['rp_payment_amount'] );
-        $journal       = esc_attr( $_POST['rp_payment_journal'] );
-        $payment_date  = esc_attr( $_POST['rp_payment_date'] );
-        $payment_time  = esc_attr( $_POST['rp_payment_time'] );
-        $memo          = esc_attr( $_POST['rp_memo'] );
-        $title         = "#{$invoice} {$customer}";
+        // Form validation
+        $errors = array();
+        $required_fields['rp_customer'] = 'Customer is required.';
+        $required_fields['rp_phone']    = 'Phone is required.';
+        $required_fields['rp_email']    = 'Email is required.';
+        $required_fields['rp_invoice_number']    = 'Invoice is required.';
+        $required_fields['rp_payment_amount']    = 'Amount is required.';
+        $required_fields['rp_payment_journal']   = 'Journal is required.';
+        $required_fields['rp_payment_date']      = 'Date is required.';
 
-        // prepare payment data 
-        $payment_data = array(
-            'post_type'     => 'rp_payment',
-            'post_status'   => 'publish',
-            'post_title'    => $title,
-            // 'rp_customer'   => $customer,
-            // 'rp_phone'      => $phone,
-            // 'rp_email'      => $email,
-            // 'rp_invoice_number' => $invoice,
-            // 'rp_payment_amount' => $amount,
-            // 'rp_payment_journal'=> $journal,
-            // 'rp_payment_date'   => $payment_data,
-            // 'rp_payment_time'   => $payment_time,
-            // 'rp_memo'           => $memo
-        );
+        foreach ($_POST as $key => $value) {
+            if (array_key_exists($key, $required_fields)) {
+                if (!strlen(esc_attr( $_POST[$key] ))) {
+                    $errors[$key] = $required_fields[$key];
+                }
+            }
+        }
 
-        $payment_id = 0;
-        $payment_id = wp_insert_post( $payment_data, true );
-        update_field( rp_get_acf_key('rp_customer'), $customer, $payment_id );
-        update_field( rp_get_acf_key('rp_phone'), $phone, $payment_id );
-        update_field( rp_get_acf_key('rp_email'), $email, $payment_id );
-        update_field( rp_get_acf_key('rp_invoice_number'), $invoice, $payment_id );
-        update_field( rp_get_acf_key('rp_payment_amount'), $amount, $payment_id );
-        update_field( rp_get_acf_key('rp_payment_journal'), $journal, $payment_id );
-        update_field( rp_get_acf_key('rp_payment_date'), $payment_date, $payment_id );
-        update_field( rp_get_acf_key('rp_payment_time'), $payment_time, $payment_id );
-        update_field( rp_get_acf_key('rp_memo'), $memo, $payment_id );
-        update_field( rp_get_acf_key('rp_status'), 'Open', $payment_id );
+        if (count($errors)) {
+            $result['errors'] = $errors;
+        }else {
+
+            $customer      = esc_attr( $_POST['rp_customer'] );
+            $phone         = esc_attr( $_POST['rp_phone'] );
+            $email         = esc_attr( $_POST['rp_email'] );
+            $invoice       = esc_attr( $_POST['rp_invoice_number'] );
+            $amount        = esc_attr( $_POST['rp_payment_amount'] );
+            $journal       = esc_attr( $_POST['rp_payment_journal'] );
+            $payment_date  = esc_attr( $_POST['rp_payment_date'] );
+            $payment_time  = esc_attr( $_POST['rp_payment_time'] );
+            $memo          = esc_attr( $_POST['rp_memo'] );
+            $title         = "#{$invoice} {$customer}";
+
+            // prepare payment data 
+            $payment_data = array(
+                'post_type'     => 'rp_payment',
+                'post_status'   => 'publish',
+                'post_title'    => $title,
+            );
+            $payment_id = wp_insert_post( $payment_data, true );
+
+            update_field( rp_get_acf_key('rp_customer'), $customer, $payment_id );
+            update_field( rp_get_acf_key('rp_phone'), $phone, $payment_id );
+            update_field( rp_get_acf_key('rp_email'), $email, $payment_id );
+            update_field( rp_get_acf_key('rp_invoice_number'), $invoice, $payment_id );
+            update_field( rp_get_acf_key('rp_payment_amount'), $amount, $payment_id );
+            update_field( rp_get_acf_key('rp_payment_journal'), $journal, $payment_id );
+            update_field( rp_get_acf_key('rp_payment_date'), $payment_date, $payment_id );
+            update_field( rp_get_acf_key('rp_payment_time'), $payment_time, $payment_id );
+            update_field( rp_get_acf_key('rp_memo'), $memo, $payment_id );
+            update_field( rp_get_acf_key('rp_status'), 'Open', $payment_id );
+
+            $result['status'] = 1;
+            $result['message'] = 'Subscription saved';
+        }
 
     } catch (Exception $e) {}
 
