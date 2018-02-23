@@ -72,7 +72,7 @@ function rp_save_payment() {
     } catch (Exception $e) {}
 
     // return result an json
-    slb_return_json($result);
+    rp_return_json($result);
 }
 add_action( 'wp_ajax_nopriv_rp_save_payment', 'rp_save_payment' ); // regular website visitor
 add_action( 'wp_ajax_rp_save_payment', 'rp_save_payment' ); // admin user
@@ -102,4 +102,17 @@ function rp_get_acf_key( $field_name ) {
         case 'rp_status':
             return 'field_5a8d6e5811a9e';
     }
+}
+
+// encode to json
+function rp_return_json( $php_array ) {
+
+    // endcode result as json string
+    $json_result = json_encode($php_array);
+
+    // return result
+    die($json_result);
+
+    // stop all other processing
+    exit;
 }

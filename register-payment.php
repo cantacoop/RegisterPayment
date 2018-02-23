@@ -11,6 +11,10 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  register-payment
 */
 
+// enable php debug mode
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // include form
 include_once(plugin_dir_path( __FILE__ ) . 'core/views/form.php');
 
@@ -33,6 +37,10 @@ include_once( plugin_dir_path( __FILE__ ) . 'cpt/rp_payment.php');
 
 // include Custom Field journal
 include_once( plugin_dir_path( __FILE__ ) . 'cpt/rp_journal.php');
+
+// register ajax actions
+add_action( 'wp_ajax_nopriv_rp_save_payment', 'rp_save_payment' ); // regular website visitor
+add_action( 'wp_ajax_rp_save_payment', 'rp_save_payment' ); // admin user
 
 // register shortcode
 function rp_register_shortcode() {
@@ -100,3 +108,20 @@ function sp_custom_admin_titles( $title, $post_id ) {
 
     return $output;
 }
+
+// loads external files into PUBLIC website
+function rp_public_scripts() {
+
+    // register scripts with WordPress's internal library
+    wp_register_script( 'register-payment-js', 
+        plugins_url( '/js/register-payment.js', __FILE__ ), 
+        array('jquery'), 
+        '', 
+        true 
+    );
+
+    // add to que of scripts that get loaded into every page
+    wp_enqueue_script( 'register-payment-js' );
+}
+// load external files to public website
+add_action( 'wp_enqueue_scripts', 'rp_public_scripts');

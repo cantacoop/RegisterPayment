@@ -17,7 +17,7 @@ function rp_form_shortcode( $args ) {
     $output =
 '<div class="container-fluid">
     <div class="row">
-        <form method="post"
+        <form method="post" name="rp_form" id="rp_form" class="rp_form"
         action="/wp-admin/admin-ajax.php?action=rp_save_payment">
             <fieldset>
                 <legend>Register Payment</legend>
