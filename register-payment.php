@@ -24,9 +24,15 @@ include_once( plugin_dir_path( __FILE__ ) . 'lib/advanced-custom-fields/acf.php'
 add_filter('acf/settings/path', 'rp_acf_settings_path');
 add_filter('acf/settings/dir', 'rp_acf_settings_dir');
 add_filter('acf/settings/show_admin', 'rp_acf_show_admin');
-// if (!defined('ACF_LITE')) {
-//     define('ACF_LITE', true); // turn off ACF plugin menu
-// }
+if (!defined('ACF_LITE')) {
+    define('ACF_LITE', true); // turn off ACF plugin menu
+}
+
+// include Custom Field payment
+include_once( plugin_dir_path( __FILE__ ) . 'cpt/rp_payment.php');
+
+// include Custom Field journal
+include_once( plugin_dir_path( __FILE__ ) . 'cpt/rp_journal.php');
 
 // register shortcode
 function rp_register_shortcode() {
